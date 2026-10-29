@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks & Grade Calculator</title>
+</head>
+<body>
+
+    <h1>Student Marks & Grade Calculator</h1>
+
+    <h3>Name</h3>
+    <input type="text" id="name" placeholder="Enter your name">
+
+    <h3>Gender</h3>
+    <label><input type="radio" name="gender" value="Male"> Male</label>
+    <label><input type="radio" name="gender" value="Female"> Female</label>
+
+    <h3>Course</h3>
+    <label><input type="checkbox" class="course" value="HNDIT"> HNDIT</label>
+    <label><input type="checkbox" class="course" value="HNDSE"> HNDSE</label>
+    <label><input type="checkbox" class="course" value="HNDJA"> HNDJA</label>
+
+    <br><br>
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Subject</th>
+            <th>Marks (0–100)</th>
+            <th>Grade</th>
+        </tr>
+
+        <tr>
+            <td>Machine Learning</td>
+            <td><input type="number" id="mark1" min="0" max="100"></td>
+            <td id="grade1">-</td>
+        </tr>
+
+        <tr>
+            <td>Computer Network</td>
+            <td><input type="number" id="mark2" min="0" max="100"></td>
+            <td id="grade2">-</td>
+        </tr>
+
+        <tr>
+            <td>Architecture</td>
+            <td><input type="number" id="mark3" min="0" max="100"></td>
+            <td id="grade3">-</td>
+        </tr>
+
+        <tr>
+            <th colspan="2">Average</th>
+            <th id="average">-</th>
+        </tr>
+    </table>
+
+    <br>
+
+    <button type="button" onclick="calculate()">Submit</button>
+    <button type="button" onclick="continueToDetails()">Click</button>
+
+    <p id="result"></p>
+
+    <script>
+        function getGrade(mark) {
+            if (mark >= 75) {
+                return "A";
+            } else if (mark >= 65) {
+                return "B";
+            } else if (mark >= 50) {
+                return "C";
+            } else if (mark >= 35) {
+                return "D";
+            } else {
+                return "F";
+            }
+        }
+
+        function getSelectedGender() {
+            const gender = document.querySelector('input[name="gender"]:checked');
+            return gender ? gender.value : "Not selected";
+        }
+
+        function getSelectedCourses() {
+            return Array.from(document.querySelectorAll('.course:checked')).map(item => item.value);
+        }
+
+        function calculate() {
+            const name = document.getElementById("name").value.trim();
+            const m1 = document.getElementById("mark1").value;
+            const m2 = document.getElementById("mark2").value;
+            const m3 = document.getElementById("mark3").value;
+
+            if (name === "") {
+                alert("Please enter your name!");
+                return null;
+            }
+
+            if (m1 === "" || m2 === "" || m3 === "") {
+                alert("Please enter all marks!");
+                return null;
+            }
+
+            const marks = [Number(m1), Number(m2), Number(m3)];
+
+            for (const mark of marks) {
+                if (mark < 0 || mark > 100) {
+                    alert("Marks must be between 0 and 100!");
+                    return null;
+                }
+            }
+
+            const grades = marks.map(mark => getGrade(mark));
+            const average = (marks[0] + marks[1] + marks[2]) / 3;
+
+            document.getElementById("grade1").textContent = grades[0];
+            document.getElementById("grade2").textContent = grades[1];
+            document.getElementById("grade3").textContent = grades[2];
+            document.getElementById("average").textContent = average.toFixed(2);
+            document.getElementById("result").textContent = `${name}'s results calculated successfully.`;
+
+            return {
+                name: name,
+                gender: getSelectedGender(),
+                courses: getSelectedCourses(),
+                marks: marks,
+                grades: grades,
+                average: average.toFixed(2)
+            };
+        }
+
+        function continueToDetails() {
+            const data = calculate();
+
+            if (!data) {
+                return;
+            }
+
+            localStorage.setItem("studentDetails", JSON.stringify(data));
+            window.location.href = "details.html";
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+</head>
+<body>
+    <h1>Student Details</h1>
+
+    <div id="details"></div>
+
+    <br>
+    <button type="button" onclick="window.location.href='index.html'">Back to Form</button>
+
+    <script>
+        const student = JSON.parse(localStorage.getItem('studentDetails'));
+        const details = document.getElementById('details');
+
+        if (!student) {
+            details.innerHTML = '<p>No student details found.</p>';
+        } else {
+            const courses = student.courses.length ? student.courses.join(', ') : 'No course selected';
+
+            details.innerHTML = `
+                <p><strong>Name:</strong> ${student.name}</p>
+                <p><strong>Gender:</strong> ${student.gender}</p>
+                <p><strong>Courses:</strong> ${courses}</p>
+                <p><strong>Marks:</strong> ${student.marks.join(', ')}</p>
+                <p><strong>Grades:</strong> ${student.grades.join(', ')}</p>
+                <p><strong>Average:</strong> ${student.average}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
